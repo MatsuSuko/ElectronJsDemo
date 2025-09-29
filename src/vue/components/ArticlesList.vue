@@ -3,7 +3,7 @@
     <div class="header-bar">
       <div class="header-content">
         <div class="brand">
-          <h1>WoofPress</h1>
+          <h1>Canis</h1>
         </div>
 
         <div class="header-actions">
