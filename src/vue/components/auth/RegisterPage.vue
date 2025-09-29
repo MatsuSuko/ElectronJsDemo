@@ -199,7 +199,7 @@ export default {
 }
 
 .input-group input {
-  width: 100%;
+  width: 90%;
   padding: 16px 20px;
   border: 1px solid #d2d2d7;
   border-radius: 12px;
