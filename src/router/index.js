@@ -1,12 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import LoginPage from '../vue/components/LoginPage.vue';
-import RegisterPage from '../vue/components/RegisterPage.vue';
-import ArticlesList from '../vue/components/ArticlesList.vue';
-import ArticleDetail from '../vue/components/ArticleDetail.vue';
-import ArticleForm from '../vue/components/ArticleForm.vue';
+import LoginPage from '../vue/components/auth/LoginPage.vue';
+import RegisterPage from '../vue/components/auth/RegisterPage.vue';
+import ArticlesList from '../vue/components/articles/ArticlesList.vue';
+import ArticleDetail from '../vue/components/articles/ArticleDetail.vue';
+import ArticleForm from '../vue/components/articles/ArticleForm.vue';
 import api from '../vue/services/api';
 
-// Tableau des routes
 const routes = [
     {
         path: '/',
@@ -29,15 +28,15 @@ const routes = [
         meta: { requiresAuth: true },
     },
     {
-        path: '/articles/:id',
-        name: 'ArticleDetail',
-        component: ArticleDetail,
-        meta: { requiresAuth: true },
-    },
-    {
         path: '/articles/new',
         name: 'ArticleNew',
         component: ArticleForm,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/articles/:id',
+        name: 'ArticleDetail',
+        component: ArticleDetail,
         meta: { requiresAuth: true },
     },
     {
@@ -53,7 +52,6 @@ const router = createRouter({
     routes,
 });
 
-// Guard pour vérifier l'authentification
 router.beforeEach((to, from, next) => {
     const isAuthenticated = !!api.getToken();
 

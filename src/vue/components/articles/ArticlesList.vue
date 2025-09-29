@@ -3,7 +3,7 @@
     <div class="header-bar">
       <div class="header-content">
         <div class="brand">
-          <h1>Canis</h1>
+          <h1>🐶 Canis</h1>
         </div>
 
         <div class="header-actions">
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import api from '../services/api';
+import api from '../../services/api';
 
 export default {
   data() {
