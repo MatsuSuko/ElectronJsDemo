@@ -1,8 +1,13 @@
 <template>
-  <router-view/>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
-<script setup>
+<script>
+export default {
+  name: 'App'
+}
 </script>
 
 <style>
@@ -12,7 +17,9 @@
   box-sizing: border-box;
 }
 
-body {
+#app {
   font-family: Arial, sans-serif;
+  height: 100vh;
+  background: #f5f5f5;
 }
 </style>
