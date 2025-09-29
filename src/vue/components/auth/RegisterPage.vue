@@ -65,6 +65,30 @@
           </div>
         </div>
 
+        <div class="input-group">
+          <input
+              v-model="form.city"
+              type="text"
+              placeholder="Ville"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+              v-model="form.cityCode"
+              type="text"
+              placeholder="Code postal"
+          />
+        </div>
+
+        <div class="input-group">
+          <input
+              v-model="form.phone"
+              type="tel"
+              placeholder="Téléphone"
+          />
+        </div>
+
         <button type="submit" class="btn-primary">
           Créer mon compte
         </button>
