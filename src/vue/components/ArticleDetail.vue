@@ -5,7 +5,7 @@
     <div v-if="article" class="article-detail">
       <img
           v-if="article.imgPath"
-          :src="article.imgPath"
+          :src="article.imgPath + '?t=' + Date.now()"
           :alt="article.title"
           class="article-image"
           @error="handleImageError"
@@ -38,11 +38,19 @@ export default {
   async mounted() {
     await this.loadArticle();
   },
+  watch: {
+    '$route.params.id'() {
+      this.loadArticle();
+    }
+  },
   methods: {
     async loadArticle() {
       try {
+        this.loading = true;
         const id = this.$route.params.id;
         const response = await api.getArticle(id);
+
+        console.log('Article rechargé:', response.data);
 
         if (response.code === '200') {
           this.article = response.data;
@@ -68,12 +76,12 @@ export default {
     editArticle() {
       this.$router.push(`/articles/${this.article.id}/edit`);
     },
+    goBack() {
+      this.$router.push('/articles');
+    },
     handleImageError(e) {
       console.log('Erreur chargement image:', e.target.src);
       e.target.style.display = 'none';
-    },
-    goBack() {
-      this.$router.push('/articles');
     }
   }
 };

@@ -32,10 +32,16 @@
             placeholder="URL de l'image (optionnel)"
         />
 
+        <div v-if="form.imgPath" class="image-preview">
+          <p>Aperçu de l'image :</p>
+          <img :src="form.imgPath" alt="Aperçu" @error="imageError" />
+        </div>
+
         <button type="submit">{{ isEdit ? 'Modifier' : 'Créer' }}</button>
       </form>
 
       <p v-if="error" class="error">{{ error }}</p>
+      <p v-if="imageErrorMsg" class="error">{{ imageErrorMsg }}</p>
     </div>
   </div>
 </template>
@@ -54,6 +60,7 @@ export default {
         imgPath: ''
       },
       error: '',
+      imageErrorMsg: '',
       isEdit: false
     };
   },
@@ -68,8 +75,13 @@ export default {
     async loadArticle(id) {
       try {
         const response = await api.getArticle(id);
+
         if (response.code === '200') {
-          this.form = { ...response.data };
+          this.form.id = response.data.id;
+          this.form.title = response.data.title;
+          this.form.desc = response.data.desc;
+          this.form.author = response.data.author;
+          this.form.imgPath = response.data.imgPath || '';
         }
       } catch (err) {
         this.error = 'Erreur chargement article';
@@ -78,6 +90,8 @@ export default {
     async handleSubmit() {
       try {
         this.error = '';
+        this.imageErrorMsg = '';
+
         const response = await api.saveArticle(this.form);
 
         if (response.code === '200') {
@@ -88,6 +102,9 @@ export default {
       } catch (err) {
         this.error = 'Erreur de connexion au serveur';
       }
+    },
+    imageError() {
+      this.imageErrorMsg = 'URL d\'image invalide';
     },
     goBack() {
       this.$router.push('/articles');
@@ -151,6 +168,26 @@ input:focus, textarea:focus {
 textarea {
   min-height: 150px;
   resize: vertical;
+}
+
+.image-preview {
+  margin: 10px 0;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.image-preview p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 button[type="submit"] {

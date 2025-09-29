@@ -2,8 +2,11 @@
   <div class="page">
     <div class="header">
       <h1>Liste des Articles</h1>
-      <button @click="createArticle" class="create-btn">+ Nouvel article</button>
-      <button @click="logout" class="logout-btn">Déconnexion</button>
+      <div class="user-actions">
+        <span class="username">{{ userEmail }}</span>
+        <button @click="createArticle" class="create-btn">+ Nouvel article</button>
+        <button @click="logout" class="logout-btn">Déconnexion</button>
+      </div>
     </div>
 
     <div class="articles-grid" v-if="articles.length">
@@ -15,7 +18,7 @@
       >
         <img
             v-if="article.imgPath"
-            :src="article.imgPath"
+            :src="article.imgPath + '?t=' + Date.now()"
             :alt="article.title"
             class="article-image"
             @error="handleImageError"
@@ -40,16 +43,28 @@ export default {
   data() {
     return {
       articles: [],
-      loading: true
+      loading: true,
+      userEmail: ''
     };
   },
   async mounted() {
+    this.userEmail = api.getUserEmail();
     await this.loadArticles();
+  },
+  async activated() {
+    await this.loadArticles();
+  },
+  watch: {
+    '$route'() {
+      this.loadArticles();
+    }
   },
   methods: {
     async loadArticles() {
       try {
+        this.loading = true;
         const response = await api.getArticles();
+        console.log('Articles rechargés:', response.data);
         if (response.code === '200') {
           this.articles = response.data;
         }
@@ -65,13 +80,13 @@ export default {
     createArticle() {
       this.$router.push('/articles/new');
     },
-    handleImageError(e) {
-      console.log('Erreur chargement image:', e.target.src);
-      e.target.style.display = 'none';
-    },
     logout() {
       api.logout();
       this.$router.push('/login');
+    },
+    handleImageError(e) {
+      console.log('Erreur chargement image:', e.target.src);
+      e.target.style.display = 'none';
     }
   }
 };
@@ -89,7 +104,22 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
   gap: 10px;
+}
+
+.username {
+  background: #f0f0f0;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
 }
 
 .create-btn {
@@ -101,6 +131,10 @@ export default {
   cursor: pointer;
 }
 
+.create-btn:hover {
+  background: #218838;
+}
+
 .logout-btn {
   padding: 10px 20px;
   background: #dc3545;
@@ -108,6 +142,10 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #c82333;
 }
 
 .articles-grid {

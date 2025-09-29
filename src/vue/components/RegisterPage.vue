@@ -8,6 +8,9 @@
         <input v-model="form.password" type="password" placeholder="Mot de passe" required />
         <input v-model="form.passwordConfirm" type="password" placeholder="Confirmer mot de passe" required />
         <input v-model="form.pseudo" placeholder="Pseudo" required />
+        <input v-model="form.city" placeholder="Ville" />
+        <input v-model="form.cityCode" placeholder="Code postal" />
+        <input v-model="form.phone" placeholder="Téléphone" />
 
         <button type="submit">S'inscrire</button>
       </form>
@@ -33,7 +36,10 @@ export default {
         email: '',
         password: '',
         passwordConfirm: '',
-        pseudo: ''
+        pseudo: '',
+        city: '',
+        cityCode: '',
+        phone: ''
       },
       error: '',
       success: ''
@@ -45,7 +51,15 @@ export default {
         this.error = '';
         this.success = '';
 
+        // Vérification côté client
+        if (this.form.password !== this.form.passwordConfirm) {
+          this.error = 'Les mots de passe ne correspondent pas';
+          return;
+        }
+
         const response = await api.signup(this.form);
+
+        console.log('Réponse signup:', response); // Pour débugger
 
         if (response.code === '200') {
           this.success = 'Inscription réussie ! Redirection...';
@@ -56,6 +70,7 @@ export default {
           this.error = response.message || 'Erreur d\'inscription';
         }
       } catch (err) {
+        console.error('Erreur signup:', err);
         this.error = 'Erreur de connexion au serveur';
       }
     }
@@ -68,7 +83,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .card {
@@ -76,7 +92,8 @@ export default {
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
 }
 
 h1 {

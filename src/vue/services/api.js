@@ -3,30 +3,7 @@ const API_BASE_URL = 'http://127.0.0.1:3000';
 class ApiService {
     constructor() {
         this.token = localStorage.getItem('token') || null;
-    }
-
-    // Gestion le cas où l'API n'est pas disponible
-    async request(endpoint, options = {}) {
-        try {
-            const response = await fetch(url, {
-                ...options,
-                headers,
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('API Error:', error);
-            return {
-                code: 'ERROR',
-                message: 'Erreur de connexion au serveur',
-                data: null
-            };
-        }
+        this.userEmail = localStorage.getItem('userEmail') || null;
     }
 
     setToken(token) {
@@ -36,6 +13,19 @@ class ApiService {
         } else {
             localStorage.removeItem('token');
         }
+    }
+
+    setUserEmail(email) {
+        this.userEmail = email;
+        if (email) {
+            localStorage.setItem('userEmail', email);
+        } else {
+            localStorage.removeItem('userEmail');
+        }
+    }
+
+    getUserEmail() {
+        return this.userEmail;
     }
 
     getToken() {
@@ -59,11 +49,19 @@ class ApiService {
                 headers,
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
             const data = await response.json();
             return data;
         } catch (error) {
             console.error('API Error:', error);
-            throw error;
+            return {
+                code: 'ERROR',
+                message: 'Erreur de connexion au serveur',
+                data: null
+            };
         }
     }
 
@@ -76,6 +74,7 @@ class ApiService {
 
         if (data.code === '200' && data.data) {
             this.setToken(data.data);
+            this.setUserEmail(email);
         }
 
         return data;
@@ -116,6 +115,7 @@ class ApiService {
     }
 
     async saveArticle(article) {
+        console.log('Envoi article:', article); // Debug
         return await this.request('/articles/save', {
             method: 'POST',
             body: JSON.stringify(article),
@@ -130,6 +130,7 @@ class ApiService {
 
     logout() {
         this.setToken(null);
+        this.setUserEmail(null);
     }
 }
 
