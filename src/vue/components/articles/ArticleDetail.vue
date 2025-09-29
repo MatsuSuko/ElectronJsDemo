@@ -10,7 +10,7 @@
 
     <div class="container">
       <div v-if="loading" class="loading">
-        <div class="spinner"></div>
+        <div uk-spinner="ratio: 2"></div>
       </div>
 
       <div v-else-if="article" class="article-wrapper">

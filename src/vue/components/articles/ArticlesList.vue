@@ -39,8 +39,8 @@
                 :alt="article.title"
                 @error="handleImageError"
             />
-            <div v-else class="placeholder-image">
-              <span>—</span>
+            <div v-if="loading" class="loading">
+              <div uk-spinner="ratio: 2"></div>
             </div>
           </div>
 
